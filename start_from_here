@@ -5,7 +5,7 @@ def input_function():
     alpha.append('#')
     x = input()
     k = int(input())
-    find_shortest_string(alpha, x, k)
+    print(find_shortest_string(alpha, x, k))
 
 
 input_function()
