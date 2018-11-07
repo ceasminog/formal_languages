@@ -1,12 +1,14 @@
 from collections import deque
 import syslog
 import math
+import copy
 
 
 class Node:
     nextNodes = {}
     is_final = False
     is_root = False
+
     def __init__(self):
         self.is_final = False
         self.nextNodes = {}
@@ -104,7 +106,6 @@ class Automata:
                     if f_left.is_root:
                         self.root = f_left
 
-
                 if i == '#':
                     self.fin = last.pop()
                     return 'Automat is finished'
@@ -127,23 +128,14 @@ def bfs(cur_node, word_len, num_of_x, x, k):
     return cur_min
 
 
-def input_function():
-    alpha = input()
-    alpha = list(alpha)
-    alpha.append('#')
-    x = input()
-    k = int(input())
-    find_shortest_string(alpha, x, k)
-
-
 # decorator
 def check_types(func):
     def wrapper(*args, **kwargs):
         if kwargs.__len__() != 0 or args.__len__() != 3:
             raise ValueError('Incorrect number of parameters')
-        if not (isinstance(args[0], list) or
-                isinstance(args[1], str) or
-                args[1].__len__() != 1 or isinstance(args[2], int)):
+        if not (isinstance(args[0], list) and
+                isinstance(args[1], str) and
+                isinstance(args[2], int)):
             raise ValueError('Incorrect input type')
         func(*args, **kwargs)
 
@@ -156,6 +148,3 @@ def find_shortest_string(alpha, x, k):
     syslog.syslog(my_automat.alpha_to_automat())  # log
     root = my_automat.root
     print(bfs(root, 0, 0, x, k))
-
-
-input_function()
