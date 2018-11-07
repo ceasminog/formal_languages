@@ -137,7 +137,8 @@ def check_types(func):
                 isinstance(args[1], str) and
                 isinstance(args[2], int)):
             raise ValueError('Incorrect input type')
-        func(*args, **kwargs)
+        res = func(*args, **kwargs)
+        return res
 
     return wrapper
 
@@ -147,4 +148,4 @@ def find_shortest_string(alpha, x, k):
     my_automat = Automata(alpha)
     syslog.syslog(my_automat.alpha_to_automat())  # log
     root = my_automat.root
-    print(bfs(root, 0, 0, x, k))
+    return(bfs(root, 0, 0, x, k))
