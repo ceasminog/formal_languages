@@ -6,13 +6,17 @@ import math
 class Node:
     nextNodes = {}
     is_final = False
+    is_root = False
     def __init__(self):
         self.is_final = False
         self.nextNodes = {}
+        is_root = False
 
     def unite_nodes(self, other):
         if other.is_final:
             self.is_final = True
+        if other.is_root:
+            self.is_root = True
         self.nextNodes.update(other.nextNodes)
         syslog.syslog('nodes united')
 
@@ -20,11 +24,14 @@ class Node:
 class Automata:
     alpha = []
     root = Node()
+    fin = Node()
     automat_cur_size = 0
 
     # @check_type_of_alpha
     def __init__(self, a):
-        self.alpha = a;
+        self.alpha = a
+        self.root.is_root = True
+        self.fin.is_final = True
 
     def add_new_node(self, cur, char_):
         new_node = Node()
@@ -82,6 +89,8 @@ class Automata:
                             f_right = self.add_new_node(f_left, second_el)
                             last.append(f_right)
                             first.append(f_left)
+                        if f_left.is_root:
+                            self.root = f_left
                     else:
                         stack.append('$')
                     f_left = first.pop()
@@ -92,17 +101,19 @@ class Automata:
                     first.append(f_left)
                     f_right.unite_nodes(s_right)
                     last.append(f_right)
+                    if f_left.is_root:
+                        self.root = f_left
+
 
                 if i == '#':
-                    f_right = last.pop()
-                    f_right.is_final = True
+                    self.fin = last.pop()
                     return 'Automat is finished'
 
         return 'Something went wrong'
 
 
 def bfs(cur_node, word_len, num_of_x, x, k):
-    if (cur_node.is_final):
+    if (cur_node.nextNodes.__len__() == 0):
         if (num_of_x == k):
             return word_len  # found it
         else:
@@ -144,7 +155,7 @@ def find_shortest_string(alpha, x, k):
     my_automat = Automata(alpha)
     syslog.syslog(my_automat.alpha_to_automat())  # log
     root = my_automat.root
-    bfs(root, 0, 0, x, k)
+    print(bfs(root, 0, 0, x, k))
 
 
 input_function()
