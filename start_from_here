@@ -1,0 +1,11 @@
+from main import find_shortest_string
+def input_function():
+    alpha = input()
+    alpha = list(alpha)
+    alpha.append('#')
+    x = input()
+    k = int(input())
+    find_shortest_string(alpha, x, k)
+
+
+input_function()
