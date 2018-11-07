@@ -6,7 +6,9 @@ import math
 class Node:
     nextNodes = {}
     is_final = False
-    dist_from_root = -1
+    def __init__(self):
+        self.is_final = False
+        self.nextNodes = {}
 
     def unite_nodes(self, other):
         if other.is_final:
@@ -46,8 +48,10 @@ class Automata:
                     first_el = stack.pop()
                     if first_el != '$':
                         cur_left = Node()
-                        cur_right = self.add_new_node(cur_left, first_el)
-                        cur_right = self.add_new_node(cur_left, second_el)
+                        cur = Node()
+                        cur_right = Node()
+                        cur_left.nextNodes[first_el] = cur
+                        cur.nextNodes[second_el] = cur_right
                         first.append(cur_left)
                         last.append(cur_right)
                     else:
