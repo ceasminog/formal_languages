@@ -8,11 +8,11 @@ class Node:
     is_final = False
     dist_from_root = -1
 
-    # unites 2 nodes
-    def UniteNodes(self, other):
+    def unite_nodes(self, other):
         if other.is_final:
             self.is_final = True
         self.nextNodes.update(other.nextNodes)
+        syslog.syslog('nodes united')
 
 
 class Automata:
@@ -27,6 +27,7 @@ class Automata:
     def add_new_node(self, cur, char_):
         new_node = Node()
         cur.nextNodes[char_] = new_node
+        syslog.syslog('new node ' + char_)
         return new_node
 
     def alpha_to_automat(self):
@@ -83,9 +84,9 @@ class Automata:
                     f_right = last.pop()
                     s_left = first.pop()
                     s_right = last.pop()
-                    f_left.UniteNodes(s_left)
+                    f_left.unite_nodes(s_left)
                     first.append(f_left)
-                    f_right.UniteNodes(s_right)
+                    f_right.unite_nodes(s_right)
                     last.append(f_right)
 
                 if i == '#':
@@ -137,7 +138,7 @@ def check_types(func):
 @check_types
 def find_shortest_string(alpha, x, k):
     my_automat = Automata(alpha)
-    syslog.syslog(my_automat.alpha_to_automat())
+    syslog.syslog(my_automat.alpha_to_automat())  # log
     root = my_automat.root
     bfs(root, 0, 0, x, k)
 
